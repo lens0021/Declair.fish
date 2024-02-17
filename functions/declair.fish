@@ -32,6 +32,9 @@ function _declair_update_rc
 end
 
 function _declair_update
+    if functions -q fisher
+        fisher update
+    end
     _declair_update_git_repositories
 end
     
