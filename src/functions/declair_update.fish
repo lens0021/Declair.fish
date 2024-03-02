@@ -18,7 +18,7 @@ Subcommands:
 end
 
 function _declair_update_rc
-    set -l last_updated $_declair_last_updated
+    set -f last_updated $_declair_last_updated
     if test -n $last_updated
         and test (math $last_updated + '60*60*8') -lt (date +%s)
 
@@ -26,7 +26,7 @@ function _declair_update_rc
         switch $do_update
             case Y y yes
                 _declair_update
-                set -Ux _declair_last_updated (date +%s)
+                set -U _declair_last_updated (date +%s)
         end
     end
 end
