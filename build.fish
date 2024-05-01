@@ -1,1 +1,1 @@
-cat src/functions/*.fish >functions/declair.fish
+cat src/functions/**/*.fish >functions/declair.fish
