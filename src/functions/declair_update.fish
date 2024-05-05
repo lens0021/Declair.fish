@@ -11,9 +11,10 @@ end
 function _declair_help
     echo "\
 Usage: declair subcommand
-    
+
 Subcommands:
-    update\
+    update
+    pm
 "
 end
 
@@ -37,7 +38,7 @@ function _declair_update
     end
     _declair_update_git_repositories
 end
-    
+
 function _declair_update_git_repositories
     if test -z $_declair_target_repositories
         echo _declair_target_repositories is empty. Please set.
