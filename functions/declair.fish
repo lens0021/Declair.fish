@@ -1,23 +1,23 @@
 function declair
-    argparse --stop-nonopt -- $argv
+  argparse --stop-nonopt -- $argv
 
-    if functions --query _declair_$argv[1]
-        _declair_$argv[1] $argv[2..]
-    else
-        _declair_help
-    end
+  if functions --query _declair_$argv[1]
+      _declair_$argv[1] $argv[2..]
+  else
+      _declair_help
+  end
 end
 
 function _declair_help
-    echo "\
+  echo "\
 Usage: declair subcommand
 
 Subcommands:
-    update
-    pm
+  update
+  pm
+  gitconfig
 "
 end
-
 function _declair_update_rc
     set -f last_updated $_declair_last_updated
     if test -n $last_updated
@@ -52,6 +52,49 @@ function _declair_update_git_repositories
         git -C $repo pull
     end
 end
+function _declair_gitconfig
+  argparse --stop-nonopt -- $argv
+
+  if functions --query _declair_gitconfig_$argv[1]
+    _declair_gitconfig_$argv[1] $argv[2..]
+  else
+    _declair_gitconfig_help
+  end
+end
+
+function _declair_gitconfig_help
+  echo "\
+Usage: declair gitconfig subcommand
+
+Subcommands:
+  push
+  pull
+"
+end
+
+function  _declair_gitconfig_push
+  set --function pm_file $__fish_config_dir/declair.json
+
+  yq -oj -i ".git.config = {}" $pm_file
+  for conf in (git config --global --list)
+    set -l key (echo $conf | cut -d= -f1)
+    set -l val (echo $conf | cut -d= -f2)
+    yq -oj -i ".git.config[\"$key\"] = \"$val\"" $pm_file
+  end
+end
+
+function  _declair_gitconfig_pull
+  set --function pm_file $__fish_config_dir/declair.json
+
+  for conf in (git config --global --list | cut -d= -f1)
+    git config --global --unset-all $conf
+  end
+
+  for conf in (yq -oy '.git.config | keys | .[]' $pm_file)
+    set -l val (yq -oy ".git.config[\"$conf\"]" $pm_file)
+    git config --global "$conf" "$val"
+  end
+end
 function _declair_pm
   argparse --stop-nonopt -- $argv
 
@@ -84,14 +127,12 @@ function  _declair_pm_update
     for installed in $pkg_installeds
       if string match --quiet --entire $desired $installed
         set is_installed true
-        # $desired is already installed
         break
       end
     end
     if [ $is_installed = 'false' ]
-      echo TODO install $desired
+      _declair_pm_install $desired
     end
-    # _declair_pm_install $desired
   end
 end
 
