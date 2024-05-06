@@ -34,7 +34,8 @@ function  _declair_pm_update
       end
     end
     if [ $is_installed = 'false' ]
-      _declair_pm_install $desired
+      sudo dnf install -y $desired
+      _declair_pm_add_json $pkg_name $pkg_version
     end
   end
 end
@@ -43,7 +44,7 @@ function  _declair_pm_install
   argparse --stop-nonopt -- $argv
   set -f pkg_name $argv[1]
 
-  if dnf -Cq list $pkg_name >/dev/null
+  if rpm --query $pkg_name >/dev/null
     echo $pkg_name seems to be already installed.
 
     set -f pkg_version (rpm --query $pkg_name --queryformat "%{VERSION}")
