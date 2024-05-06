@@ -15,6 +15,7 @@ Usage: declair subcommand
 Subcommands:
   update
   pm
+  sym
   gitconfig
 "
 end
