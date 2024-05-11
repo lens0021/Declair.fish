@@ -38,6 +38,9 @@ function _declair_update
         fisher update
     end
     _declair_update_git_repositories
+    declair pm update
+    declair sym update
+    declair gitconfig pull
 end
 
 function _declair_update_git_repositories
