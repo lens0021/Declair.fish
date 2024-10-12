@@ -26,21 +26,21 @@ function _declair_sym_update
         set -l src (__declair_resolve_path "$src")
         set -l dist (__declair_resolve_path "$dist")
 
-        echo "src: $src"
-        echo "dist: $dist"
-        if test ! -f $dist || test ! -s $dist
+        if test ! -f "$dist"; and test ! -s "$dist"
+            echo "-  $src"
+            echo "-> $dist"
             mkdir -p (dirname $dist)
-            ln -s $src $dist
+            ln -s $src $dist -f
         end
     end
 end
 
 function __declair_resolve_path
     argparse --stop-nonopt -- $argv
-    set -f path $argv[1]
-    set -f path (echo $path | sed "s?~?$HOME?")
+    set -l path $argv[1]
+    set -l path (echo $path | sed "s?~?$HOME?")
     if test -e "$path"
-        set -f path (realpath "$path")
+        set -l path (realpath "$path")
     end
     echo $path
 end
