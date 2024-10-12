@@ -26,7 +26,7 @@ function _declair_sym_update
         set -l src (__declair_resolve_path "$src")
         set -l dist (__declair_resolve_path "$dist")
 
-        if test ! -f "$dist"; and test ! -s "$dist"
+        if test ! -f "$dist"; or test ! -s "$dist"
             echo "-  $src"
             echo "-> $dist"
             mkdir -p (dirname $dist)
