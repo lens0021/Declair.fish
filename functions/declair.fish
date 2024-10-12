@@ -124,8 +124,35 @@ Subcommands:
 "
 end
 
+function _declair_pm_install
+    argparse --stop-nonopt -- $argv
+    if type rpm >/dev/null
+        _declair_pm_rpm_install
+    end
+end
+
+function _declair_pm_remove
+    argparse --stop-nonopt -- $argv
+    if type rpm >/dev/null
+        _declair_pm_rpm_remove
+    end
+end
+
 function _declair_pm_update
     argparse --stop-nonopt -- $argv
+    if type rpm >/dev/null
+        _declair_pm_rpm_update
+    end
+end
+
+function _declair_pm_upgrade
+    argparse --stop-nonopt -- $argv
+    if type rpm >/dev/null
+        _declair_pm_rpm_upgrade
+    end
+end
+
+function _declair_pm_rpm_update
     set -f pkg_installeds (rpm --query --all)
     set -f pkg_desireds (_declair_pm_list)
     for desired in $pkg_desireds
@@ -138,31 +165,31 @@ function _declair_pm_update
             _declair_pm_add_json $pkg_name $pkg_version
         end
     end
-end
 
-function _declair_pm_install
-    argparse --stop-nonopt -- $argv
-    set -f pkg_name $argv[1]
+    function _declair_pm_rpm_install
+        argparse --stop-nonopt -- $argv
+        set -f pkg_name $argv[1]
 
-    if rpm --query $pkg_name >/dev/null
-        echo $pkg_name seems to be already installed.
+        if rpm --query $pkg_name >/dev/null
+            echo $pkg_name seems to be already installed.
 
-        set -f pkg_version (rpm --query $pkg_name --queryformat "%{VERSION}")
-        _declair_pm_add_json $pkg_name $pkg_version
-        # _declair_pm_add_json --lock $pkg_name $pkg_version
-    else
-        sudo dnf install -y $argv[1..]
+            set -f pkg_version (rpm --query $pkg_name --queryformat "%{VERSION}")
+            _declair_pm_add_json $pkg_name $pkg_version
+            # _declair_pm_add_json --lock $pkg_name $pkg_version
+        else
+            sudo dnf install -y $argv[1..]
+        end
     end
-end
 
-function _declair_pm_remove
-    argparse --stop-nonopt -- $argv
-    sudo dnf remove $argv[1]
-end
+    function _declair_pm_rpm_remove
+        argparse --stop-nonopt -- $argv
+        sudo dnf remove $argv[1]
+    end
 
-function _declair_pm_upgrade
-    argparse --stop-nonopt -- $argv
-    sudo dnf upgrade $argv[1]
+    function _declair_pm_rpm_upgrade
+        argparse --stop-nonopt -- $argv
+        sudo dnf upgrade $argv[1]
+    end
 end
 
 function _declair_pm_add_json
