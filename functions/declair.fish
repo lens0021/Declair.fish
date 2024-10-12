@@ -212,10 +212,24 @@ function _declair_sym_update
 
     for src in (yq -oy '.sym | keys| .[]' $declair_file)
         set -l dist (yq -oy ".sym[\"$src\"]" $declair_file)
+        set -l src (__declair_resolve_path "$src")
+        set -l dist (__declair_resolve_path "$dist")
 
+        echo "src: $src"
+        echo "dist: $dist"
         if test ! -f $dist || test ! -s $dist
             mkdir -p (dirname $dist)
             ln -s $src $dist
         end
     end
+end
+
+function __declair_resolve_path
+    argparse --stop-nonopt -- $argv
+    set -f path $argv[1]
+    set -f path (echo $path | sed "s?~?$HOME?")
+    if test -e "$path"
+        set -f path (realpath "$path")
+    end
+    echo $path
 end
