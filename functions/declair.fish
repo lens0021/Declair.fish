@@ -24,7 +24,7 @@ function _declair_update_rc
     if test -n $last_updated
         and test (math $last_updated + '60*60*12') -lt (date +%s)
 
-        read -lP 'The last updated date is too old. Check the updates? (s to skip)' do_update
+        read -lP 'The last updated date is too old. Check the updates? (s to skip) ' do_update
         switch $do_update
             case Y y yes
                 _declair_update
