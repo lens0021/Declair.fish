@@ -126,28 +126,28 @@ end
 
 function _declair_pm_install
     argparse --stop-nonopt -- $argv
-    if type rpm >/dev/null
+    if type rpm &>/dev/null
         _declair_pm_rpm_install
     end
 end
 
 function _declair_pm_remove
     argparse --stop-nonopt -- $argv
-    if type rpm >/dev/null
+    if type rpm &>/dev/null
         _declair_pm_rpm_remove
     end
 end
 
 function _declair_pm_update
     argparse --stop-nonopt -- $argv
-    if type rpm >/dev/null
+    if type rpm &>/dev/null
         _declair_pm_rpm_update
     end
 end
 
 function _declair_pm_upgrade
     argparse --stop-nonopt -- $argv
-    if type rpm >/dev/null
+    if type rpm &>/dev/null
         _declair_pm_rpm_upgrade
     end
 end
