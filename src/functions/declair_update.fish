@@ -18,6 +18,9 @@ function _declair_update
     if functions -q fisher
         fisher update
     end
+    if type bw &>/dev/null
+        bw sync
+    end
     _declair_update_git_repositories
     declair pm update
     declair sym update
