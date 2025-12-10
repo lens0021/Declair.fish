@@ -46,9 +46,6 @@ function _declair_update
         rbw sync
     end
     _declair_update_git_repositories
-    declair pm update
-    declair sym update
-    declair gitconfig pull
 end
 
 function _declair_update_git_repositories
