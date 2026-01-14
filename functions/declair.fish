@@ -45,7 +45,6 @@ function _declair_update
     if type rbw &>/dev/null
         rbw sync
     end
-    _declair_update_git_repositories
 end
 
 function _declair_update_git_repositories
